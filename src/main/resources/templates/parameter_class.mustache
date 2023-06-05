@@ -1,0 +1,29 @@
+package {{packagename}};
+
+{{#imports}}
+import {{.}};
+{{/imports}}
+
+@Generated("jsongen")
+public abstract class {{#cap1stChar}}{{objectname}}{{/cap1stChar}} implements Printable {
+
+    private {{#cap1stChar}}{{objectname}}{{/cap1stChar}}() {}
+
+    {{#alternatives}}
+    public static final class {{#cap1stChar}}{{name}}{{/cap1stChar}} extends {{objectname}} {
+
+        private final {{type}} {{name}};
+
+        public {{#cap1stChar}}{{name}}{{/cap1stChar}}(final {{type}} {{name}}) {
+           this.{{name}} = Objects.requireNonNull({{name}});
+        }
+
+        @Override
+        public <T extends Media<T>> T printOn(final T media) {
+            return {{name}}.printOn(media);
+        }
+
+    }
+
+    {{/alternatives}}
+}

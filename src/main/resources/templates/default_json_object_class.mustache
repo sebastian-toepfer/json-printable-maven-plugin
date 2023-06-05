@@ -1,0 +1,55 @@
+package {{packagename}};
+
+{{#imports}}
+import {{.}};
+{{/imports}}
+
+@Generated("jsongen")
+public final class {{objectname}} implements Printable {
+
+    private final CompositePrintable values;
+
+    public {{objectname}}({{#required}}final {{type}}{{#genericType}}<{{genericType}}>{{/genericType}} {{name}}{{^-last}}, {{/-last}}{{/required}}) {
+        this(
+            new CompositePrintable()
+            {{#required}}
+                .withPrintable(new {{adapter}}("{{name}}", Objects.requireNonNull({{name}}){{#toString}}.{{toString}}(){{/toString}}))
+            {{/required}}
+        );
+    }
+
+    private {{objectname}}(final CompositePrintable values) {
+        this.values = Objects.requireNonNull(values);
+    }
+
+    {{#properties}}
+    public {{objectname}} with{{#cap1stChar}}{{name}}{{/cap1stChar}}(final {{type}}{{#genericType}}<{{genericType}}>{{/genericType}} {{name}}) {
+        return new {{objectname}}(values.withPrintable(new {{adapter}}("{{name}}", {{name}}{{#toString}}.{{toString}}(){{/toString}})));
+    }
+
+    {{/properties}}
+    @Override
+    public final <T extends Media<T>> T printOn(final T media) {
+        return values.printOn(media);
+    }
+
+    {{#enums}}
+    public enum {{name}} {
+        {{#values}}
+        {{enumName}}("{{enumValue}}"){{^-last}},{{/-last}}{{#-last}};{{/-last}}
+        {{/values}}
+
+        private final String value;
+
+        private {{name}}(final String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
+
+    }
+    {{/enums}}
+}
