@@ -7,7 +7,7 @@
 
     <groupId>io.github.sebastian-toepfer.json.rpc</groupId>
     <artifactId>json-printable-maven-plugin</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>maven-plugin</packaging>
 
     <name>json-printable-maven-plugin</name>
