@@ -24,7 +24,6 @@
 package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
 
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.utils.FirstCharToUpperCase;
-import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import java.util.Map;
@@ -100,8 +99,6 @@ public final class Property implements Typeable {
                     json.getValue().asJsonObject(),
                     new FirstCharToUpperCase(json.getValue().asJsonObject().getString("title")).toCase()
                 );
-        } else if (Objects.equals(jsonType(), "JSONSchema")) {
-            result = schemaAlternative();
         } else if (isArray() && Objects.equals(new JsonTypeResolver(jsonForGenericType()).resolveType(), "oneOf")) {
             result = oneOfAlternative(jsonForGenericType(), genericType());
         } else {
@@ -112,19 +109,6 @@ public final class Property implements Typeable {
 
     private boolean isArray() {
         return Objects.equals("array", jsonType());
-    }
-
-    private ParameterAlternatives schemaAlternative() {
-        return new ParameterAlternatives(
-            new SchemaAlternativeTypeable(),
-            Json
-                .createArrayBuilder()
-                .add(Json.createObjectBuilder().add("$ref", "#/fake/jsonSchemaObject"))
-                .add(Json.createObjectBuilder().add("$ref", "#/definitions/referenceObject"))
-                .build(),
-            typeRegistry,
-            jsonTypeToJavaTypeMapping
-        );
     }
 
     private ParameterAlternatives oneOfAlternative(final JsonObject typeInfo, final String name) {
@@ -157,36 +141,6 @@ public final class Property implements Typeable {
     @Override
     public String name() {
         return json.getKey();
-    }
-
-    class SchemaAlternativeTypeable implements Typeable {
-
-        public SchemaAlternativeTypeable() {}
-
-        @Override
-        public JsonObjectClassDefinition owner() {
-            return Property.this.owner;
-        }
-
-        @Override
-        public String name() {
-            return jsonTypeToJavaTypeMapping.jsonSchemaAlternativename();
-        }
-
-        @Override
-        public String type() {
-            return Property.this.type();
-        }
-
-        @Override
-        public String genericType() {
-            return Property.this.genericType();
-        }
-
-        @Override
-        public String adapter() {
-            return Property.this.adapter();
-        }
     }
 
     class OneOfAlternativeTypeable implements Typeable {

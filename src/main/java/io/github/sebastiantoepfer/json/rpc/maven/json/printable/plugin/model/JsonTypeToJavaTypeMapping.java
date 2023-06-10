@@ -36,10 +36,8 @@ import java.util.Optional;
 
 public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
     private final Map<String, ClassType> jsonToJava;
-    private final String jsonSchemaAlternativeName;
 
     public JsonTypeToJavaTypeMapping(final String schemaClassName) {
-        jsonSchemaAlternativeName = "JsonSchemaOrReference";
         this.jsonToJava =
             Map.ofEntries(
                 Map.entry("integer", new ClassType(long.class.getSimpleName())),
@@ -48,9 +46,8 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
                 Map.entry("array", new ClassType(List.class.getSimpleName(), List.class.getCanonicalName())),
                 Map.entry("object", new ClassType(Printable.class.getSimpleName(), Printable.class.getCanonicalName())),
                 Map.entry("$ref", new ClassType(String.class.getSimpleName())),
-                Map.entry("JSONSchema", new ClassType(jsonSchemaAlternativeName)),
                 Map.entry(
-                    "jsonSchemaObject",
+                    "JSONSchema",
                     new ClassType(schemaClassName.substring(schemaClassName.lastIndexOf(".") + 1), schemaClassName)
                 )
             );
@@ -79,10 +76,6 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
 
     public JavaTypeResolver resolveFor(final JsonObject typeInfo) {
         return new JavaTypeResolver(typeInfo);
-    }
-
-    String jsonSchemaAlternativename() {
-        return jsonSchemaAlternativeName;
     }
 
     public class JavaTypeResolver {
