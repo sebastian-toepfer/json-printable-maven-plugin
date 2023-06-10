@@ -1,4 +1,4 @@
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sebastian-toepfer_json-rpc&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sebastian-toepfer_json-rpc)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sebastian-toepfer_json-printable-maven-plugin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sebastian-toepfer_json-printable-maven-plugin)
 
 # JSON Printable maven plugin
 Generate java classes form the openrpc json schema that implement the printable interface.
