@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class EnumProperty {
+public final class EnumProperty {
     private final JsonObject value;
 
     EnumProperty(final JsonObject value) {

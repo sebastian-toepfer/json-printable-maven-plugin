@@ -32,7 +32,7 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class JavaClassWriter extends Writer {
+public final class JavaClassWriter extends Writer {
     private static final Logger LOG = Logger.getLogger(JavaClassWriter.class.getName());
 
     private final Writer delegate;
