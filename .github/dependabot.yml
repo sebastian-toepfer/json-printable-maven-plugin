@@ -8,6 +8,13 @@ updates:
     time: "01:00"
   target-branch: main
 
+- package-ecosystem: "gitsubmodule"
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "01:00"
+  target-branch: main
+
 - package-ecosystem: maven
   directory: "/"
   schedule:
