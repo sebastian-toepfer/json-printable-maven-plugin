@@ -1,4 +1,5 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sebastian-toepfer_json-printable-maven-plugin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sebastian-toepfer_json-printable-maven-plugin)
+[![Reproducible Builds](https://img.shields.io/badge/Reproducible_Builds-ok-success?labelColor=1e5b96)](https://github.com/jvm-repo-rebuild/reproducible-central#io.github.sebastian-toepfer.json.rpc:json-printable-maven-plugin)
 
 # JSON Printable maven plugin
 Generate java classes form the openrpc json schema that implement the printable interface.
