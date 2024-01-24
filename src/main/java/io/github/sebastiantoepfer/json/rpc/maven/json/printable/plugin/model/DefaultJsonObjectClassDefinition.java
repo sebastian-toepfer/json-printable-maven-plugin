@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 import javax.annotation.processing.Generated;
 
 class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
+
     private final JsonObject object;
     private final TypeRegistry typeRegistry;
     private JsonTypeToJavaTypeMapping jsonTypeToJavaTypeMapping;
@@ -104,17 +105,16 @@ class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
             .flatMap(Collection::stream)
             .filter(Predicate.not(String::isBlank))
             .collect(
-                Collectors.toCollection(
-                    () ->
-                        new TreeSet<>(
-                            Set.of(
-                                Generated.class.getName(),
-                                Media.class.getName(),
-                                Printable.class.getName(),
-                                CompositePrintable.class.getName(),
-                                Objects.class.getName()
-                            )
+                Collectors.toCollection(() ->
+                    new TreeSet<>(
+                        Set.of(
+                            Generated.class.getName(),
+                            Media.class.getName(),
+                            Printable.class.getName(),
+                            CompositePrintable.class.getName(),
+                            Objects.class.getName()
                         )
+                    )
                 )
             );
     }

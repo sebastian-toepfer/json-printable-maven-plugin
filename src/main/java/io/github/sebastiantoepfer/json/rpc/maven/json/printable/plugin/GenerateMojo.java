@@ -24,6 +24,7 @@
 package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin;
 
 import com.samskivert.mustache.Mustache;
+import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.generator.JavaClassOutput;
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.generator.MustacheJavaClassTemplate;
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.CompositeTypeRegistry;
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.JsonObjectClassDefinition;
@@ -59,6 +60,7 @@ import org.apache.maven.project.MavenProject;
     requiresDependencyResolution = ResolutionScope.RUNTIME
 )
 public class GenerateMojo extends AbstractMojo {
+
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
 
@@ -85,7 +87,7 @@ public class GenerateMojo extends AbstractMojo {
                 new CompositeTypeRegistry(List.of(mapping, new PrintableAdapters())),
                 mapping
             )
-            .createModel();
+                .createModel();
 
             final MustacheJavaClassTemplate objectClassTemplate = createTemplate();
 
@@ -141,7 +143,7 @@ public class GenerateMojo extends AbstractMojo {
                         StandardCharsets.UTF_8
                     )
                 ),
-            sourceDestDir.toPath()
+            new JavaClassOutput(sourceDestDir.toPath())
         );
         getLog().debug("< createTemplate");
         return result;

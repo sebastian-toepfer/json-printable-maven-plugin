@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class Property implements Typeable {
+
     private final JsonObjectClassDefinition owner;
     private final TypeRegistry typeRegistry;
     private final Map.Entry<String, JsonValue> json;
@@ -144,6 +145,7 @@ public final class Property implements Typeable {
     }
 
     class OneOfAlternativeTypeable implements Typeable {
+
         private final String name;
 
         public OneOfAlternativeTypeable(final String name) {

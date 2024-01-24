@@ -29,39 +29,29 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class JavaClassWriter extends Writer {
-    private static final Logger LOG = Logger.getLogger(JavaClassWriter.class.getName());
+public final class JavaClassOutput implements TemplateOutput {
 
-    private final Writer delegate;
+    private static final Logger LOG = Logger.getLogger(JavaClassOutput.class.getName());
 
-    public JavaClassWriter(final Path srcDirectory, final String packageName, final String className)
-        throws IOException {
+    private final Path srcDirectory;
+
+    public JavaClassOutput(final Path srcDirectory) {
+        this.srcDirectory = Objects.requireNonNull(srcDirectory);
+    }
+
+    @Override
+    public Writer createWriterFor(final String packageName, final String className) throws IOException {
         final Path packageDirectory = srcDirectory.resolve(packageName.replace('.', '/'));
         if (packageDirectory.toFile().mkdirs()) {
             LOG.log(Level.FINE, "package directories created!");
         }
-        delegate =
-            new OutputStreamWriter(
-                new FileOutputStream(packageDirectory.resolve(String.format("%s.java", className)).toFile(), false),
-                StandardCharsets.UTF_8
-            );
-    }
-
-    @Override
-    public void write(final char[] chars, final int i, final int i1) throws IOException {
-        delegate.write(chars, i, i1);
-    }
-
-    @Override
-    public void flush() throws IOException {
-        delegate.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-        delegate.close();
+        return new OutputStreamWriter(
+            new FileOutputStream(packageDirectory.resolve(String.format("%s.java", className)).toFile(), false),
+            StandardCharsets.UTF_8
+        );
     }
 }

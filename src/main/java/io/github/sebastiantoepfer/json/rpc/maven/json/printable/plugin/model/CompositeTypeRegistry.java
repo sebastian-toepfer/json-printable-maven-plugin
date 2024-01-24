@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class CompositeTypeRegistry implements TypeRegistry {
+
     private final List<TypeRegistry> registries;
 
     public CompositeTypeRegistry() {

@@ -35,6 +35,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
+
     private final Map<String, ClassType> jsonToJava;
 
     public JsonTypeToJavaTypeMapping(final String schemaClassName) {
@@ -79,6 +80,7 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
     }
 
     public class JavaTypeResolver {
+
         private final JsonObject typeInfo;
 
         private JavaTypeResolver(final JsonObject typeInfo) {
@@ -100,6 +102,7 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
     }
 
     private static class ClassType {
+
         private final String name;
         private final String fullQualifiedName;
 

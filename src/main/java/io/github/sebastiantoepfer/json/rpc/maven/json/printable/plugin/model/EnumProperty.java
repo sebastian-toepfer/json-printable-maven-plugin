@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public final class EnumProperty {
+
     private final JsonObject value;
 
     EnumProperty(final JsonObject value) {
@@ -49,6 +50,7 @@ public final class EnumProperty {
     }
 
     public static class EnumPropertyValues {
+
         private static final Pattern INVALID_ENUM_NAME = Pattern.compile("^[^\\p{L}]");
         private final JsonString value;
 

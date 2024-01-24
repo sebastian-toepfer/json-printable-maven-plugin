@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.nio.file.Path;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,36 +43,27 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public final class MustacheJavaClassTemplate implements JavaClassTemplate {
-    private final Template template;
-    private final Path sourceDestDir;
 
-    public MustacheJavaClassTemplate(final Template template, final Path sourceDestDir) {
+    private final Template template;
+    private final TemplateOutput output;
+
+    public MustacheJavaClassTemplate(final Template template, final TemplateOutput output) {
         this.template = template;
-        this.sourceDestDir = sourceDestDir;
+        this.output = output;
     }
 
     @Override
     public void generate(final JsonObjectClassDefinition context) {
-        try (final Writer writer = new JavaClassWriter(sourceDestDir, context.packagename(), context.objectname())) {
+        try (final Writer writer = output.createWriterFor(context.packagename(), context.objectname())) {
             template.execute(new ClassDefinitionWithLambdas(context), writer);
             writer.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Writer generate(final JsonObjectClassDefinition context, final Writer writer) {
-        try {
-            template.execute(new ClassDefinitionWithLambdas(context), writer);
-            writer.flush();
-            return writer;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     static class ClassDefinitionWithLambdas extends AbstractMap<String, Object> {
+
         private final JsonObjectClassDefinition delegate;
         private Set<Entry<String, Object>> entries;
 

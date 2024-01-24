@@ -37,6 +37,7 @@ import java.util.Objects;
  * open-rpc-meta-schema simple schema scanner ... but not a real good one :)
  */
 public final class SchemaParser {
+
     private final JsonObject schema;
     private final TypeRegistry typeRegistry;
     private final JsonTypeToJavaTypeMapping jsonTypeToJavaTypeMapping;
