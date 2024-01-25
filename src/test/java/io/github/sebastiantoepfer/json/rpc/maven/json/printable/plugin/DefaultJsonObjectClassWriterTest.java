@@ -256,7 +256,7 @@ class DefaultJsonObjectClassWriterTest {
                     public ErrorObject(final long code, final String message) {
                         this(
                             new CompositePrintable()
-                                .withPrintable(new NamedNumberPrintable("code", Objects.requireNonNull(code)))
+                                .withPrintable(new NamedNumberPrintable("code", code))
                                 .withPrintable(new NamedStringPrintable("message", Objects.requireNonNull(message)))
                         );
                     }

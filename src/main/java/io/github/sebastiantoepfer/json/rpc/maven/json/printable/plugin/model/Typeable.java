@@ -30,6 +30,8 @@ public interface Typeable {
 
     String type();
 
+    boolean isNullable();
+
     String genericType();
 
     String adapter();
