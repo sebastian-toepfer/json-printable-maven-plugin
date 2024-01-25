@@ -41,8 +41,8 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
     public JsonTypeToJavaTypeMapping(final String schemaClassName) {
         this.jsonToJava =
             Map.ofEntries(
-                Map.entry("integer", new ClassType(long.class.getSimpleName())),
-                Map.entry("boolean", new ClassType(boolean.class.getSimpleName())),
+                Map.entry("integer", new ClassType(long.class.getSimpleName(), false)),
+                Map.entry("boolean", new ClassType(boolean.class.getSimpleName(), false)),
                 Map.entry("uri", new ClassType(URL.class.getSimpleName(), URL.class.getCanonicalName())),
                 Map.entry("array", new ClassType(List.class.getSimpleName(), List.class.getCanonicalName())),
                 Map.entry("object", new ClassType(Printable.class.getSimpleName(), Printable.class.getCanonicalName())),
@@ -99,19 +99,40 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
             }
             return result;
         }
+
+        boolean isNullable() {
+            final boolean result;
+            final String jsonType = new JsonTypeResolver(typeInfo).resolveType();
+            if (jsonToJava.containsKey(jsonType)) {
+                result = jsonToJava.get(jsonType).isNullable();
+            } else {
+                result = true;
+            }
+            return result;
+        }
     }
 
     private static class ClassType {
 
         private final String name;
         private final String fullQualifiedName;
+        private final boolean nullable;
 
         public ClassType(final String name) {
-            this(name, null);
+            this(name, true);
+        }
+
+        public ClassType(final String name, final boolean nullable) {
+            this(name, nullable, null);
         }
 
         public ClassType(final String name, final String fullQualifiedName) {
+            this(name, true, fullQualifiedName);
+        }
+
+        public ClassType(final String name, final boolean nullable, final String fullQualifiedName) {
             this.name = Objects.requireNonNull(name);
+            this.nullable = nullable;
             this.fullQualifiedName = fullQualifiedName;
         }
 
@@ -125,6 +146,10 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
 
         public boolean hasName(final String name) {
             return this.name.equals(name);
+        }
+
+        public boolean isNullable() {
+            return nullable;
         }
     }
 }

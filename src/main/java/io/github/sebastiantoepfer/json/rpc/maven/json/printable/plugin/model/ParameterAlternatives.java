@@ -143,6 +143,11 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
         }
 
         @Override
+        public boolean isNullable() {
+            return jsonTypeToJavaTypeMapping.resolveFor(obj).isNullable();
+        }
+
+        @Override
         public String genericType() {
             return null;
         }
