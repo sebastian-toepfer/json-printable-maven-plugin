@@ -40,6 +40,7 @@ import java.util.TreeSet;
 import javax.annotation.processing.Generated;
 
 public final class ParameterAlternatives implements JsonObjectClassDefinition {
+
     private final Typeable parent;
     private final JsonArray oneOf;
     private final TypeRegistry registry;
@@ -70,16 +71,15 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
             .flatMap(Collection::stream)
             .filter(not(String::isBlank))
             .collect(
-                toCollection(
-                    () ->
-                        new TreeSet<>(
-                            Set.of(
-                                Generated.class.getName(),
-                                Media.class.getName(),
-                                Printable.class.getName(),
-                                Objects.class.getName()
-                            )
+                toCollection(() ->
+                    new TreeSet<>(
+                        Set.of(
+                            Generated.class.getName(),
+                            Media.class.getName(),
+                            Printable.class.getName(),
+                            Objects.class.getName()
                         )
+                    )
                 )
             );
     }
@@ -114,6 +114,7 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
     }
 
     public final class ParameterAlternative implements Typeable {
+
         private final JsonObject obj;
 
         private ParameterAlternative(final JsonObject obj) {

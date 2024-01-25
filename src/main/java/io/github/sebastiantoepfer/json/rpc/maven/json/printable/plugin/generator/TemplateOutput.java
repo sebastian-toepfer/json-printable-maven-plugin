@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 sebastian.
+ * Copyright 2024 sebastian.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,34 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
+package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.generator;
 
-import jakarta.json.JsonObject;
+import java.io.IOException;
+import java.io.Writer;
 
-class JsonTypeResolver {
-
-    private final JsonObject typeInfo;
-
-    public JsonTypeResolver(final JsonObject typeInfo) {
-        this.typeInfo = typeInfo;
-    }
-
-    public String resolveType() {
-        final String result;
-        if (typeInfo.containsKey("format")) {
-            result = typeInfo.getString("format");
-        } else if (typeInfo.containsKey("oneOf")) {
-            result = "oneOf";
-        } else if (typeInfo.containsKey("enum")) {
-            result = "enum";
-        } else if (typeInfo.containsKey("type")) {
-            result = typeInfo.getString("type");
-        } else if (typeInfo.containsKey("$ref")) {
-            final String ref = typeInfo.getString("$ref");
-            result = ref.substring(ref.lastIndexOf('/') + 1);
-        } else {
-            result = "object";
-        }
-        return result;
-    }
+public interface TemplateOutput {
+    Writer createWriterFor(String packageName, String className) throws IOException;
 }

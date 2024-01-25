@@ -24,10 +24,7 @@
 package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.generator;
 
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.JsonObjectClassDefinition;
-import java.io.Writer;
 
 public interface JavaClassTemplate {
     void generate(JsonObjectClassDefinition context);
-
-    Writer generate(JsonObjectClassDefinition context, Writer writer);
 }

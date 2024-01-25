@@ -26,6 +26,7 @@ package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.utils;
 import java.util.Objects;
 
 public final class FirstCharToUpperCase {
+
     private final String value;
 
     public FirstCharToUpperCase(final String value) {

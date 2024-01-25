@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public final class PrintableAdapters implements TypeRegistry {
+
     private final Class<? extends Printable> defaultAdapter;
     private final Map<String, Class<? extends Printable>> typeToAdapter;
 

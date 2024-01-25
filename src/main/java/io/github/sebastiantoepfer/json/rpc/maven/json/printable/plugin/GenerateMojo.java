@@ -23,26 +23,11 @@
  */
 package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin;
 
-import com.samskivert.mustache.Mustache;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.generator.MustacheJavaClassTemplate;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.CompositeTypeRegistry;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.JsonObjectClassDefinition;
+import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.generator.JavaClassOutput;
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.JsonTypeToJavaTypeMapping;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.PrintableAdapters;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.Property;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.SchemaParser;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -59,6 +44,7 @@ import org.apache.maven.project.MavenProject;
     requiresDependencyResolution = ResolutionScope.RUNTIME
 )
 public class GenerateMojo extends AbstractMojo {
+
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
 
@@ -78,27 +64,12 @@ public class GenerateMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().debug("> execute");
         try {
-            final JsonObject schema = loadSchema();
-            JsonTypeToJavaTypeMapping mapping = new JsonTypeToJavaTypeMapping(jsonSchemaClassName);
-            final List<JsonObjectClassDefinition> model = new SchemaParser(
-                schema,
-                new CompositeTypeRegistry(List.of(mapping, new PrintableAdapters())),
-                mapping
+            new CodeGenerator(
+                new ModelCreator(new JsonSchemaProvider(schemaUrl), new JsonTypeToJavaTypeMapping(jsonSchemaClassName)),
+                packageName,
+                new Templates(new JavaClassOutput(sourceDestDir.toPath()))
             )
-            .createModel();
-
-            final MustacheJavaClassTemplate objectClassTemplate = createTemplate();
-
-            model.stream().map(def -> def.withPackage(packageName)).forEach(objectClassTemplate::generate);
-
-            final MustacheJavaClassTemplate parameterClassTemplate = createTemplate("parameter_class.mustache");
-            model
-                .stream()
-                .flatMap(def -> Stream.concat(def.properties().stream(), def.required().stream()))
-                .map(Property::alternatives)
-                .filter(Objects::nonNull)
-                .forEach(parameterClassTemplate::generate);
-
+                .generateModel();
             addSourceRoot();
             getLog().debug("< execute");
         } catch (IOException e) {
@@ -123,51 +94,5 @@ public class GenerateMojo extends AbstractMojo {
             project.addCompileSourceRoot(absolutePath);
         }
         getLog().debug("< addSourceRoot");
-    }
-
-    private MustacheJavaClassTemplate createTemplate() {
-        return createTemplate("default_json_object_class.mustache");
-    }
-
-    private MustacheJavaClassTemplate createTemplate(final String templateResource) {
-        getLog().debug("> createTemplate");
-        final MustacheJavaClassTemplate result = new MustacheJavaClassTemplate(
-            Mustache
-                .compiler()
-                .compile(
-                    new InputStreamReader(
-                        GenerateMojo.class.getClassLoader()
-                            .getResourceAsStream(String.format("templates/%s", templateResource)),
-                        StandardCharsets.UTF_8
-                    )
-                ),
-            sourceDestDir.toPath()
-        );
-        getLog().debug("< createTemplate");
-        return result;
-    }
-
-    private JsonObject loadSchema() throws IOException {
-        getLog().debug("> loadSchema");
-        final JsonObject schema;
-        try (JsonReader reader = Json.createReader(schemaAsStream())) {
-            schema = reader.readObject();
-        }
-        getLog().debug(String.format("< loadSchema %s", schema));
-        return schema;
-    }
-
-    private InputStream schemaAsStream() throws IOException {
-        getLog().debug("> schemaAsStream");
-        final InputStream result;
-        if (schemaUrl == null) {
-            getLog().debug("use bundled schema.");
-            result = GenerateMojo.class.getClassLoader().getResource("open-rpc-meta-schema.json").openStream();
-        } else {
-            getLog().debug(String.format("use url %s to retrieve schema.", schemaUrl));
-            result = schemaUrl.openStream();
-        }
-        getLog().debug("< schemaAsStream");
-        return result;
     }
 }
