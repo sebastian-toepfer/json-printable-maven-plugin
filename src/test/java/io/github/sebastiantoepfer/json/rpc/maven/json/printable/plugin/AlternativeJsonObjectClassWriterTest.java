@@ -26,23 +26,10 @@ package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import com.samskivert.mustache.Mustache;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.generator.MustacheJavaClassTemplate;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.CompositeTypeRegistry;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.JsonObjectClassDefinition;
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.JsonTypeToJavaTypeMapping;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.PrintableAdapters;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.Property;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.SchemaParser;
 import io.github.sebastiantoepfer.jsonschema.JsonSchema;
-import jakarta.json.Json;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
 class AlternativeJsonObjectClassWriterTest {
@@ -103,38 +90,12 @@ class AlternativeJsonObjectClassWriterTest {
 
     private String generateOpenRPCSpecClassWithName(final String clsName) throws IOException {
         final StringWriter writer = new StringWriter();
-        JsonTypeToJavaTypeMapping mapping = new JsonTypeToJavaTypeMapping(JsonSchema.class.getName());
-        final List<JsonObjectClassDefinition> model = new SchemaParser(
-            Json
-                .createReader(GenerateMojo.class.getClassLoader().getResource("open-rpc-meta-schema.json").openStream())
-                .readObject(),
-            new CompositeTypeRegistry(List.of(mapping, new PrintableAdapters())),
-            mapping
+        new CodeGenerator(
+            new ModelCreator(new JsonSchemaProvider(), new JsonTypeToJavaTypeMapping(JsonSchema.class.getName())),
+            "io.github",
+            new Templates(new FilteredClassOutput(clsName, writer))
         )
-            .createModel();
-
-        new MustacheJavaClassTemplate(
-            Mustache
-                .compiler()
-                .compile(
-                    new InputStreamReader(
-                        GenerateMojo.class.getClassLoader().getResourceAsStream("templates/parameter_class.mustache"),
-                        StandardCharsets.UTF_8
-                    )
-                ),
-            (pckg, name) -> writer
-        )
-            .generate(
-                model
-                    .stream()
-                    .map(cls -> cls.withPackage("io.github"))
-                    .flatMap(def -> Stream.concat(def.properties().stream(), def.required().stream()))
-                    .map(Property::alternatives)
-                    .filter(Objects::nonNull)
-                    .filter(m -> m.objectname().equals(clsName))
-                    .findFirst()
-                    .get()
-            );
+            .generateModel();
         return writer.toString();
     }
 }

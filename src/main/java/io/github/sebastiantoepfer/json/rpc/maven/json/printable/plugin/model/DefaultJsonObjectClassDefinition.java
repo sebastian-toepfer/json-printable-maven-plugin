@@ -43,7 +43,7 @@ class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
 
     private final JsonObject object;
     private final TypeRegistry typeRegistry;
-    private JsonTypeToJavaTypeMapping jsonTypeToJavaTypeMapping;
+    private final JsonTypeToJavaTypeMapping jsonTypeToJavaTypeMapping;
     private String packageName;
 
     DefaultJsonObjectClassDefinition(
@@ -88,8 +88,8 @@ class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
     }
 
     @Override
-    public JsonObjectClassDefinition withPackage(final String packagename) {
-        this.packageName = packagename;
+    public JsonObjectClassDefinition withPackage(final String packageName) {
+        this.packageName = packageName;
         return this;
     }
 
