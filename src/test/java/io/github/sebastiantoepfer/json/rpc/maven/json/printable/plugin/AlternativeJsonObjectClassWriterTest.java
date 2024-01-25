@@ -54,30 +54,30 @@ class AlternativeJsonObjectClassWriterTest {
 
                     public static final class Object extends ContentDescriptorOrReference {
 
-                        private final ContentDescriptorObject Object;
+                        private final ContentDescriptorObject object;
 
-                        public Object(final ContentDescriptorObject Object) {
-                           this.Object = Objects.requireNonNull(Object);
+                        public Object(final ContentDescriptorObject object) {
+                           this.object = Objects.requireNonNull(object);
                         }
 
                         @Override
                         public <T extends Media<T>> T printOn(final T media) {
-                            return Object.printOn(media);
+                            return object.printOn(media);
                         }
 
                     }
 
                     public static final class Reference extends ContentDescriptorOrReference {
 
-                        private final ReferenceObject Reference;
+                        private final ReferenceObject reference;
 
-                        public Reference(final ReferenceObject Reference) {
-                           this.Reference = Objects.requireNonNull(Reference);
+                        public Reference(final ReferenceObject reference) {
+                           this.reference = Objects.requireNonNull(reference);
                         }
 
                         @Override
                         public <T extends Media<T>> T printOn(final T media) {
-                            return Reference.printOn(media);
+                            return reference.printOn(media);
                         }
 
                     }

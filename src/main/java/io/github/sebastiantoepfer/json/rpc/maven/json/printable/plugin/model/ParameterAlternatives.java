@@ -130,9 +130,9 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
         public String name() {
             final String result;
             if (type().startsWith("Reference")) {
-                result = "Reference";
+                result = "reference";
             } else {
-                result = "Object";
+                result = "object";
             }
             return result;
         }
