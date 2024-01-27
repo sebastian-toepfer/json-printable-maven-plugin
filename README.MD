@@ -52,7 +52,7 @@ and the plugin
 <plugin>
   <groupId>io.github.sebastian-toepfer.json.rpc</groupId>
   <artifactId>json-printable-maven-plugin</artifactId>
-  <version>0.1.0</version> <!-- this is the initial version -->
+  <version>0.2.1</version>
   <executions>
     <execution>
       <goals>
@@ -60,10 +60,8 @@ and the plugin
       </goals>
       <configuration>
         <packageName>io.github.sebastiantoepfer.json</packageName>
-        <jsonSchemaClassName>io.github.sebastiantoepfer.json.JsonObject</jsonSchemaClassName>
       </configuration>
     </execution>
   </executions>
 </plugin>
 ```
-yes you must provide a class with should be use a jsonschema. this class must also implement the printable interface.
