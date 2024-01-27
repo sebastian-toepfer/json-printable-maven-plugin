@@ -24,6 +24,7 @@
 package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
 
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.utils.FirstCharToUpperCase;
+import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import java.util.Map;
@@ -100,6 +101,8 @@ public final class Property implements Typeable {
                     json.getValue().asJsonObject(),
                     new FirstCharToUpperCase(json.getValue().asJsonObject().getString("title")).toCase()
                 );
+        } else if (Objects.equals(jsonType(), "JSONSchema")) {
+            result = schemaAlternative();
         } else if (isArray() && Objects.equals(new JsonTypeResolver(jsonForGenericType()).resolveType(), "oneOf")) {
             result = oneOfAlternative(jsonForGenericType(), genericType());
         } else {
@@ -110,6 +113,19 @@ public final class Property implements Typeable {
 
     private boolean isArray() {
         return Objects.equals("array", jsonType());
+    }
+
+    private ParameterAlternatives schemaAlternative() {
+        return new ParameterAlternatives(
+            new OneOfAlternativeTypeable("JsonSchemaOrReference"),
+            Json
+                .createArrayBuilder()
+                .add(Json.createObjectBuilder().add("$ref", "#/fake/jsonSchemaObject"))
+                .add(Json.createObjectBuilder().add("$ref", "#/definitions/referenceObject"))
+                .build(),
+            typeRegistry,
+            jsonTypeToJavaTypeMapping
+        );
     }
 
     private ParameterAlternatives oneOfAlternative(final JsonObject typeInfo, final String name) {

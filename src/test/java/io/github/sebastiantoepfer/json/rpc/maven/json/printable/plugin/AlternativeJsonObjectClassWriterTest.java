@@ -36,26 +36,27 @@ class AlternativeJsonObjectClassWriterTest {
     @Test
     void should_create_simple_alternative_class() throws Exception {
         assertThat(
-            generateOpenRPCSpecClassWithName("ContentDescriptorOrReference"),
+            generateOpenRPCSpecClassWithName("JsonSchemaOrReference"),
             is(
                 """
                 package io.github;
 
                 import io.github.sebastiantoepfer.ddd.common.Media;
                 import io.github.sebastiantoepfer.ddd.common.Printable;
+                import io.github.sebastiantoepfer.jsonschema.JsonSchema;
                 import java.util.Objects;
                 import javax.annotation.processing.Generated;
 
                 @Generated("jsongen")
-                public abstract class ContentDescriptorOrReference implements Printable {
+                public abstract class JsonSchemaOrReference implements Printable {
 
-                    private ContentDescriptorOrReference() {}
+                    private JsonSchemaOrReference() {}
 
-                    public static final class Object extends ContentDescriptorOrReference {
+                    public static final class Object extends JsonSchemaOrReference {
 
-                        private final ContentDescriptorObject object;
+                        private final JsonSchema object;
 
-                        public Object(final ContentDescriptorObject object) {
+                        public Object(final JsonSchema object) {
                            this.object = Objects.requireNonNull(object);
                         }
 
@@ -66,7 +67,7 @@ class AlternativeJsonObjectClassWriterTest {
 
                     }
 
-                    public static final class Reference extends ContentDescriptorOrReference {
+                    public static final class Reference extends JsonSchemaOrReference {
 
                         private final ReferenceObject reference;
 
