@@ -49,7 +49,7 @@ public final class EnumProperty {
         return value.getJsonArray("enum").stream().map(JsonString.class::cast).map(EnumPropertyValues::new).toList();
     }
 
-    public static class EnumPropertyValues {
+    public class EnumPropertyValues {
 
         private static final Pattern INVALID_ENUM_NAME = Pattern.compile("^[^\\p{L}]");
         private final JsonString value;
@@ -61,7 +61,7 @@ public final class EnumProperty {
         public String enumName() {
             final String result;
             if (INVALID_ENUM_NAME.matcher(enumValue()).find()) {
-                result = String.format("_%s", enumValue());
+                result = String.format("%s_%s", name(), enumValue());
             } else {
                 result = enumValue();
             }

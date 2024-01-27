@@ -41,7 +41,7 @@
     </scm>
 
     <properties>
-        <project.build.outputTimestamp>2024-01-27T09:13:59Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2024-01-27T14:19:24Z</project.build.outputTimestamp>
         <sonar.organization>sebastian-toepfer</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 

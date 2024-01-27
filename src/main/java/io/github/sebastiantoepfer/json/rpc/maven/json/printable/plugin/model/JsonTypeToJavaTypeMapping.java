@@ -48,8 +48,9 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
                 Map.entry("array", new ClassType(List.class.getSimpleName(), List.class.getCanonicalName())),
                 Map.entry("object", new ClassType(Printable.class.getSimpleName(), Printable.class.getCanonicalName())),
                 Map.entry("$ref", new ClassType(String.class.getSimpleName())),
+                Map.entry("JSONSchema", new ClassType("JsonSchemaOrReference")),
                 Map.entry(
-                    "JSONSchema",
+                    "jsonSchemaObject",
                     new ClassType(JsonSchema.class.getSimpleName(), JsonSchema.class.getCanonicalName())
                 )
             );
