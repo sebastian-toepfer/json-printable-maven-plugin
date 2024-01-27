@@ -117,7 +117,7 @@ public final class Property implements Typeable {
 
     private ParameterAlternatives schemaAlternative() {
         return new ParameterAlternatives(
-            new SchemaAlternativeTypeable(),
+            new OneOfAlternativeTypeable("JsonSchemaOrReference"),
             Json
                 .createArrayBuilder()
                 .add(Json.createObjectBuilder().add("$ref", "#/fake/jsonSchemaObject"))
@@ -163,41 +163,6 @@ public final class Property implements Typeable {
     @Override
     public String name() {
         return json.getKey();
-    }
-
-    class SchemaAlternativeTypeable implements Typeable {
-
-        public SchemaAlternativeTypeable() {}
-
-        @Override
-        public JsonObjectClassDefinition owner() {
-            return Property.this.owner;
-        }
-
-        @Override
-        public String name() {
-            return "JsonSchemaOrReference";
-        }
-
-        @Override
-        public String type() {
-            return Property.this.type();
-        }
-
-        @Override
-        public String genericType() {
-            return Property.this.genericType();
-        }
-
-        @Override
-        public String adapter() {
-            return Property.this.adapter();
-        }
-
-        @Override
-        public boolean isNullable() {
-            return true;
-        }
     }
 
     class OneOfAlternativeTypeable implements Typeable {
