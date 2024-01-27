@@ -87,6 +87,11 @@
             <artifactId>printables-core</artifactId>
             <version>${ddd.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.sebastian-toepfer.json-schema</groupId>
+            <artifactId>json-schema-api</artifactId>
+            <version>0.1.1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.parsson</groupId>
@@ -128,11 +133,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.sebastian-toepfer.json-schema</groupId>
-            <artifactId>json-schema-api</artifactId>
-            <version>0.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

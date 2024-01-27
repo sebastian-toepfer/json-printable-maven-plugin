@@ -25,6 +25,7 @@ package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
 
 import io.github.sebastiantoepfer.ddd.common.Printable;
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.utils.FirstCharToUpperCase;
+import io.github.sebastiantoepfer.jsonschema.JsonSchema;
 import jakarta.json.JsonObject;
 import java.net.URL;
 import java.util.Collection;
@@ -38,7 +39,7 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
 
     private final Map<String, ClassType> jsonToJava;
 
-    public JsonTypeToJavaTypeMapping(final String schemaClassName) {
+    public JsonTypeToJavaTypeMapping() {
         this.jsonToJava =
             Map.ofEntries(
                 Map.entry("integer", new ClassType(long.class.getSimpleName(), false)),
@@ -49,7 +50,7 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
                 Map.entry("$ref", new ClassType(String.class.getSimpleName())),
                 Map.entry(
                     "JSONSchema",
-                    new ClassType(schemaClassName.substring(schemaClassName.lastIndexOf(".") + 1), schemaClassName)
+                    new ClassType(JsonSchema.class.getSimpleName(), JsonSchema.class.getCanonicalName())
                 )
             );
     }
