@@ -27,7 +27,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.JsonTypeToJavaTypeMapping;
-import io.github.sebastiantoepfer.jsonschema.JsonSchema;
 import java.io.IOException;
 import java.io.StringWriter;
 import org.junit.jupiter.api.Test;
@@ -283,7 +282,7 @@ class DefaultJsonObjectClassWriterTest {
     private String generateOpenRPCSpecClassWithName(final String clsName) throws IOException {
         final StringWriter writer = new StringWriter();
         new CodeGenerator(
-            new ModelCreator(new JsonSchemaProvider(), new JsonTypeToJavaTypeMapping(JsonSchema.class.getName())),
+            new ModelCreator(new JsonSchemaProvider(), new JsonTypeToJavaTypeMapping()),
             "io.github",
             new Templates(new FilteredClassOutput(clsName, writer))
         )

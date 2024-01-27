@@ -51,9 +51,6 @@ public class GenerateMojo extends AbstractMojo {
     @Parameter(required = true)
     private String packageName;
 
-    @Parameter(required = true)
-    private String jsonSchemaClassName;
-
     @Parameter
     private URL schemaUrl;
 
@@ -65,7 +62,7 @@ public class GenerateMojo extends AbstractMojo {
         getLog().debug("> execute");
         try {
             new CodeGenerator(
-                new ModelCreator(new JsonSchemaProvider(schemaUrl), new JsonTypeToJavaTypeMapping(jsonSchemaClassName)),
+                new ModelCreator(new JsonSchemaProvider(schemaUrl), new JsonTypeToJavaTypeMapping()),
                 packageName,
                 new Templates(new JavaClassOutput(sourceDestDir.toPath()))
             )
