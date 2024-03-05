@@ -28,7 +28,6 @@ import static java.util.stream.Collectors.toCollection;
 
 import io.github.sebastiantoepfer.ddd.common.Media;
 import io.github.sebastiantoepfer.ddd.common.Printable;
-import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.utils.FirstCharToUpperCase;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
@@ -37,6 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import javax.annotation.processing.Generated;
 
 public final class ParameterAlternatives implements JsonObjectClassDefinition {
@@ -86,7 +86,19 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
 
     @Override
     public String objectname() {
-        return new FirstCharToUpperCase(parent.name()).toCase();
+        return alternatives()
+            .stream()
+            .map(ParameterAlternative::type)
+            .map(name -> {
+                final String result;
+                if (name.endsWith("Object")) {
+                    result = name.substring(0, name.length() - "Object".length());
+                } else {
+                    result = name;
+                }
+                return result;
+            })
+            .collect(Collectors.joining("Or"));
     }
 
     @Override
