@@ -148,7 +148,14 @@ public final class Property implements Typeable {
 
     @Override
     public String type() {
-        return jsonTypeToJavaTypeMapping.resolveFor(json.getValue().asJsonObject()).resolveType();
+        final String result;
+        final ParameterAlternatives alternative = alternatives();
+        if (isArray() || alternative == null) {
+            result = jsonTypeToJavaTypeMapping.resolveFor(json.getValue().asJsonObject()).resolveType();
+        } else {
+            result = alternative.objectname();
+        }
+        return result;
     }
 
     @Override

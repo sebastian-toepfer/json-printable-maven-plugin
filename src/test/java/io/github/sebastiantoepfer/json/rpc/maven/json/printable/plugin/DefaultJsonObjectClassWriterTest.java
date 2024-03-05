@@ -279,6 +279,114 @@ class DefaultJsonObjectClassWriterTest {
         );
     }
 
+    @Test
+    void should_generate_javaclass_with_or_parameters() throws Exception {
+        assertThat(
+            generateOpenRPCSpecClassWithName("MethodObject"),
+            is(
+                """
+                package io.github;
+
+                import io.github.sebastiantoepfer.ddd.common.Media;
+                import io.github.sebastiantoepfer.ddd.common.Printable;
+                import io.github.sebastiantoepfer.ddd.printables.core.CompositePrintable;
+                import io.github.sebastiantoepfer.ddd.printables.core.NamedBooleanPrintable;
+                import io.github.sebastiantoepfer.ddd.printables.core.NamedListPrintable;
+                import io.github.sebastiantoepfer.ddd.printables.core.NamedPrintable;
+                import io.github.sebastiantoepfer.ddd.printables.core.NamedStringPrintable;
+                import java.util.List;
+                import java.util.Objects;
+                import javax.annotation.processing.Generated;
+
+                @Generated("jsongen")
+                public final class MethodObject implements Printable {
+
+                    private final CompositePrintable values;
+
+                    public MethodObject(final String name, final List<ContentDescriptorOrReference> params) {
+                        this(
+                            new CompositePrintable()
+                                .withPrintable(new NamedStringPrintable("name", Objects.requireNonNull(name)))
+                                .withPrintable(new NamedListPrintable("params", Objects.requireNonNull(params)))
+                        );
+                    }
+
+                    private MethodObject(final CompositePrintable values) {
+                        this.values = Objects.requireNonNull(values);
+                    }
+
+                    public MethodObject withDescription(final String description) {
+                        return new MethodObject(values.withPrintable(new NamedStringPrintable("description", description)));
+                    }
+
+                    public MethodObject withSummary(final String summary) {
+                        return new MethodObject(values.withPrintable(new NamedStringPrintable("summary", summary)));
+                    }
+
+                    public MethodObject withServers(final List<ServerObject> servers) {
+                        return new MethodObject(values.withPrintable(new NamedListPrintable("servers", servers)));
+                    }
+
+                    public MethodObject withTags(final List<TagOrReference> tags) {
+                        return new MethodObject(values.withPrintable(new NamedListPrintable("tags", tags)));
+                    }
+
+                    public MethodObject withParamStructure(final MethodObjectParamStructure paramStructure) {
+                        return new MethodObject(values.withPrintable(new NamedStringPrintable("paramStructure", paramStructure.toString())));
+                    }
+
+                    public MethodObject withResult(final ContentDescriptorOrReference result) {
+                        return new MethodObject(values.withPrintable(new NamedPrintable("result", result)));
+                    }
+
+                    public MethodObject withErrors(final List<ErrorOrReference> errors) {
+                        return new MethodObject(values.withPrintable(new NamedListPrintable("errors", errors)));
+                    }
+
+                    public MethodObject withLinks(final List<LinkOrReference> links) {
+                        return new MethodObject(values.withPrintable(new NamedListPrintable("links", links)));
+                    }
+
+                    public MethodObject withExamples(final List<ExamplePairingOrReference> examples) {
+                        return new MethodObject(values.withPrintable(new NamedListPrintable("examples", examples)));
+                    }
+
+                    public MethodObject withDeprecated(final boolean deprecated) {
+                        return new MethodObject(values.withPrintable(new NamedBooleanPrintable("deprecated", deprecated)));
+                    }
+
+                    public MethodObject withExternalDocs(final ExternalDocumentationObject externalDocs) {
+                        return new MethodObject(values.withPrintable(new NamedPrintable("externalDocs", externalDocs)));
+                    }
+
+                    @Override
+                    public final <T extends Media<T>> T printOn(final T media) {
+                        return values.printOn(media);
+                    }
+
+                    public enum MethodObjectParamStructure {
+                        byposition("by-position"),
+                        byname("by-name"),
+                        either("either");
+
+                        private final String value;
+
+                        private MethodObjectParamStructure(final String value) {
+                            this.value = value;
+                        }
+
+                        @Override
+                        public String toString() {
+                            return value;
+                        }
+
+                    }
+                }
+                """
+            )
+        );
+    }
+
     private String generateOpenRPCSpecClassWithName(final String clsName) throws IOException {
         final StringWriter writer = new StringWriter();
         new CodeGenerator(
