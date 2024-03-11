@@ -163,6 +163,11 @@ public final class Property implements Typeable {
         return jsonTypeToJavaTypeMapping.resolveFor(json.getValue().asJsonObject()).isNullable();
     }
 
+    @Override
+    public boolean hasInterfaces() {
+        return jsonTypeToJavaTypeMapping.resolveFor(json.getValue().asJsonObject()).hasInterfaces();
+    }
+
     private String jsonType() {
         return new JsonTypeResolver(json.getValue().asJsonObject()).resolveType();
     }
@@ -208,6 +213,11 @@ public final class Property implements Typeable {
         @Override
         public boolean isNullable() {
             return true;
+        }
+
+        @Override
+        public boolean hasInterfaces() {
+            return false;
         }
     }
 }

@@ -31,12 +31,17 @@ import io.github.sebastiantoepfer.ddd.common.Printable;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.processing.Generated;
 
 public final class ParameterAlternatives implements JsonObjectClassDefinition {
@@ -65,10 +70,11 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
 
     @Override
     public Set<String> imports() {
-        return alternatives()
-            .stream()
-            .map(registry::fullQulifiedNameOf)
-            .flatMap(Collection::stream)
+        return Stream
+            .concat(
+                alternatives().stream().map(registry::determineFullQualifiedNameOf).flatMap(Collection::stream),
+                typesNeededByMethods()
+            )
             .filter(not(String::isBlank))
             .collect(
                 toCollection(() ->
@@ -82,6 +88,22 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
                     )
                 )
             );
+    }
+
+    private Stream<String> typesNeededByMethods() {
+        return alternatives()
+            .stream()
+            .map(ParameterAlternative::methods)
+            .flatMap(Collection::stream)
+            .map(m -> {
+                final List<Class<?>> result = new ArrayList<>();
+                result.add(m.getReturnType());
+                result.addAll(Arrays.asList(m.getParameterTypes()));
+                return result;
+            })
+            .flatMap(Collection::stream)
+            .filter(not(cls -> cls.getPackageName().startsWith("java.lang")))
+            .map(Class::getCanonicalName);
     }
 
     @Override
@@ -151,12 +173,35 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
 
         @Override
         public String type() {
-            return jsonTypeToJavaTypeMapping.resolveFor(obj).resolveType();
+            return typeResolver().resolveType();
         }
 
         @Override
         public boolean isNullable() {
-            return jsonTypeToJavaTypeMapping.resolveFor(obj).isNullable();
+            return typeResolver().isNullable();
+        }
+
+        @Override
+        public boolean hasInterfaces() {
+            return typeResolver().hasInterfaces();
+        }
+
+        public Collection<String> interfaces() {
+            return typeResolver().interfaces().map(Class::getSimpleName).toList();
+        }
+
+        public Collection<Method> methods() {
+            return typeResolver()
+                .interfaces()
+                .map(Class::getMethods)
+                .flatMap(Arrays::stream)
+                .filter(not(m -> List.of("toString", "printOn").contains(m.getName())))
+                .sorted(Comparator.comparing(Method::getName))
+                .toList();
+        }
+
+        private JsonTypeToJavaTypeMapping.JavaTypeResolver typeResolver() {
+            return jsonTypeToJavaTypeMapping.resolveFor(obj);
         }
 
         @Override

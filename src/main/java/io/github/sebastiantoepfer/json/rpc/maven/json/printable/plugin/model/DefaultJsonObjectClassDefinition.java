@@ -101,7 +101,7 @@ class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
     private Set<String> determineImports(final List<Property> properties) {
         return properties
             .stream()
-            .map(typeRegistry::fullQulifiedNameOf)
+            .map(typeRegistry::determineFullQualifiedNameOf)
             .flatMap(Collection::stream)
             .filter(Predicate.not(String::isBlank))
             .collect(

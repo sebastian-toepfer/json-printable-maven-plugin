@@ -10,7 +10,7 @@ public abstract class {{#cap1stChar}}{{objectname}}{{/cap1stChar}} implements Pr
     private {{#cap1stChar}}{{objectname}}{{/cap1stChar}}() {}
 
     {{#alternatives}}
-    public static final class {{#cap1stChar}}{{name}}{{/cap1stChar}} extends {{objectname}} {
+    public static final class {{#cap1stChar}}{{name}}{{/cap1stChar}} extends {{objectname}}{{#hasInterfaces}} implements{{#interfaces}} {{.}}{{/interfaces}}{{/hasInterfaces}} {
 
         private final {{type}} {{name}};
 
@@ -23,6 +23,19 @@ public abstract class {{#cap1stChar}}{{objectname}}{{/cap1stChar}} implements Pr
             return {{name}}.printOn(media);
         }
 
+        {{#methods}}
+        @Override
+        public {{#returnType}}{{simpleName}}{{/returnType}} {{name}}({{#parameters}}final {{#type}}{{simpleName}}{{/type}} {{name}}{{^-last}}, {{/-last}}{{/parameters}}) {
+            return value().{{name}}({{#parameters}}{{name}}{{^-last}}, {{/-last}}{{/parameters}});
+        }
+
+        {{/methods}}
+        {{#hasInterfaces}}
+        private {{type}} value() {
+            return {{name}};
+        }
+
+        {{/hasInterfaces}}
     }
 
     {{/alternatives}}

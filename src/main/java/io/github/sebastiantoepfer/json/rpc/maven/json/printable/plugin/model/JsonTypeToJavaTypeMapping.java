@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
 
@@ -51,13 +52,17 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
                 Map.entry("JSONSchema", new ClassType("JsonSchemaOrReference")),
                 Map.entry(
                     "jsonSchemaObject",
-                    new ClassType(JsonSchema.class.getSimpleName(), JsonSchema.class.getCanonicalName())
+                    new ClassType(
+                        JsonSchema.class.getSimpleName(),
+                        JsonSchema.class.getCanonicalName(),
+                        List.of(new ClassType(JsonSchema.class.getSimpleName(), JsonSchema.class.getCanonicalName()))
+                    )
                 )
             );
     }
 
     @Override
-    public Collection<String> fullQulifiedNameOf(final Typeable property) {
+    public Collection<String> determineFullQualifiedNameOf(final Typeable property) {
         final Collection<String> result = new HashSet<>();
         result.addAll(fullQulifiedNameOf(property.type()));
         if (property.genericType() != null) {
@@ -112,6 +117,28 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
             }
             return result;
         }
+
+        boolean hasInterfaces() {
+            final boolean result;
+            final String jsonType = new JsonTypeResolver(typeInfo).resolveType();
+            if (jsonToJava.containsKey(jsonType)) {
+                result = jsonToJava.get(jsonType).hasInterfaces();
+            } else {
+                result = false;
+            }
+            return result;
+        }
+
+        public Stream<Class<?>> interfaces() {
+            final Stream<Class<?>> result;
+            final String jsonType = new JsonTypeResolver(typeInfo).resolveType();
+            if (jsonToJava.containsKey(jsonType)) {
+                result = jsonToJava.get(jsonType).interfaces();
+            } else {
+                result = Stream.empty();
+            }
+            return result;
+        }
     }
 
     private static class ClassType {
@@ -119,23 +146,34 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
         private final String name;
         private final String fullQualifiedName;
         private final boolean nullable;
+        private final List<ClassType> interfaces;
 
         public ClassType(final String name) {
             this(name, true);
         }
 
         public ClassType(final String name, final boolean nullable) {
-            this(name, nullable, null);
+            this(name, nullable, null, List.of());
         }
 
         public ClassType(final String name, final String fullQualifiedName) {
-            this(name, true, fullQualifiedName);
+            this(name, fullQualifiedName, List.of());
         }
 
-        public ClassType(final String name, final boolean nullable, final String fullQualifiedName) {
+        public ClassType(final String name, final String fullQualifiedName, final List<ClassType> interfaces) {
+            this(name, true, fullQualifiedName, interfaces);
+        }
+
+        public ClassType(
+            final String name,
+            final boolean nullable,
+            final String fullQualifiedName,
+            final List<ClassType> interfaces
+        ) {
             this.name = Objects.requireNonNull(name);
             this.nullable = nullable;
             this.fullQualifiedName = fullQualifiedName;
+            this.interfaces = List.copyOf(interfaces);
         }
 
         public String name() {
@@ -152,6 +190,25 @@ public final class JsonTypeToJavaTypeMapping implements TypeRegistry {
 
         public boolean isNullable() {
             return nullable;
+        }
+
+        public boolean hasInterfaces() {
+            return !interfaces.isEmpty();
+        }
+
+        public Stream<Class<?>> interfaces() {
+            return interfaces
+                .stream()
+                .map(ClassType::fullQulifiedName)
+                .flatMap(Optional::stream)
+                .map(cls -> {
+                    try {
+                        return Optional.of(Class.forName(cls));
+                    } catch (ClassNotFoundException e) {
+                        return Optional.<Class>empty();
+                    }
+                })
+                .flatMap(Optional::stream);
         }
     }
 }
