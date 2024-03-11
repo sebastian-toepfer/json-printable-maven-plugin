@@ -134,6 +134,8 @@ class DefaultJsonObjectClassWriterTest {
                     }
 
                     public enum Openrpc {
+                        Openrpc_132("1.3.2"),
+                        Openrpc_131("1.3.1"),
                         Openrpc_130("1.3.0"),
                         Openrpc_126("1.2.6"),
                         Openrpc_125("1.2.5"),
