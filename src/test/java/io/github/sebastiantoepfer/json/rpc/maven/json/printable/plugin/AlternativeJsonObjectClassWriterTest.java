@@ -44,7 +44,12 @@ class AlternativeJsonObjectClassWriterTest {
                 import io.github.sebastiantoepfer.ddd.common.Media;
                 import io.github.sebastiantoepfer.ddd.common.Printable;
                 import io.github.sebastiantoepfer.jsonschema.JsonSchema;
+                import io.github.sebastiantoepfer.jsonschema.Validator;
+                import jakarta.json.JsonArray;
+                import jakarta.json.JsonObject;
+                import jakarta.json.JsonValue.ValueType;
                 import java.util.Objects;
+                import java.util.Optional;
                 import javax.annotation.processing.Generated;
 
                 @Generated("jsongen")
@@ -52,7 +57,7 @@ class AlternativeJsonObjectClassWriterTest {
 
                     private JsonSchemaOrReference() {}
 
-                    public static final class Object extends JsonSchemaOrReference {
+                    public static final class Object extends JsonSchemaOrReference implements JsonSchema {
 
                         private final JsonSchema object;
 
@@ -63,6 +68,45 @@ class AlternativeJsonObjectClassWriterTest {
                         @Override
                         public <T extends Media<T>> T printOn(final T media) {
                             return object.printOn(media);
+                        }
+
+                        @Override
+                        public JsonArray asJsonArray() {
+                            return value().asJsonArray();
+                        }
+
+                        @Override
+                        public JsonObject asJsonObject() {
+                            return value().asJsonObject();
+                        }
+
+                        @Override
+                        public Optional asSubSchema(final String arg0) {
+                            return value().asSubSchema(arg0);
+                        }
+
+                        @Override
+                        public ValueType getValueType() {
+                            return value().getValueType();
+                        }
+
+                        @Override
+                        public Optional keywordByName(final String arg0) {
+                            return value().keywordByName(arg0);
+                        }
+
+                        @Override
+                        public JsonSchema rootSchema() {
+                            return value().rootSchema();
+                        }
+
+                        @Override
+                        public Validator validator() {
+                            return value().validator();
+                        }
+
+                        private JsonSchema value() {
+                            return object;
                         }
 
                     }

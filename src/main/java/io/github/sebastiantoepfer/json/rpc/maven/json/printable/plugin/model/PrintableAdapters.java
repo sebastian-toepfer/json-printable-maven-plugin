@@ -57,7 +57,7 @@ public final class PrintableAdapters implements TypeRegistry {
     }
 
     @Override
-    public Collection<String> fullQulifiedNameOf(final Typeable property) {
+    public Collection<String> determineFullQualifiedNameOf(final Typeable property) {
         final Collection<String> result;
         if (property.adapter() == null) {
             result = Collections.emptyList();

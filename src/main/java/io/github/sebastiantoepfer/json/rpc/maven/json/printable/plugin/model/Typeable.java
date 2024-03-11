@@ -35,4 +35,6 @@ public interface Typeable {
     String genericType();
 
     String adapter();
+
+    boolean hasInterfaces();
 }

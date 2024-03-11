@@ -48,10 +48,10 @@ public class CompositeTypeRegistry implements TypeRegistry {
     }
 
     @Override
-    public Collection<String> fullQulifiedNameOf(final Typeable property) {
+    public Collection<String> determineFullQualifiedNameOf(final Typeable property) {
         return registries
             .stream()
-            .map(registry -> registry.fullQulifiedNameOf(property))
+            .map(registry -> registry.determineFullQualifiedNameOf(property))
             .flatMap(Collection::stream)
             .collect(toSet());
     }

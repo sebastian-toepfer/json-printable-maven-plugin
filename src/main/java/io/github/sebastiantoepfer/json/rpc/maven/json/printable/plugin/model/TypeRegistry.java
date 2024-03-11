@@ -26,5 +26,5 @@ package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
 import java.util.Collection;
 
 public interface TypeRegistry {
-    Collection<String> fullQulifiedNameOf(Typeable property);
+    Collection<String> determineFullQualifiedNameOf(Typeable property);
 }
