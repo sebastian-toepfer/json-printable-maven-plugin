@@ -25,10 +25,12 @@ package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model.JsonTypeToJavaTypeMapping;
 import java.io.IOException;
 import java.io.StringWriter;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 class DefaultJsonObjectClassWriterTest {
@@ -279,6 +281,11 @@ class DefaultJsonObjectClassWriterTest {
                 """
             )
         );
+    }
+
+    @Test
+    void should_generate_javaclass_from_propety() throws Exception {
+        assertThat(generateOpenRPCSpecClassWithName("Components"), not((Matchers.emptyString())));
     }
 
     @Test

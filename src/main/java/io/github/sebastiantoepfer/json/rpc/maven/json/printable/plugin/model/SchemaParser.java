@@ -27,11 +27,10 @@ import static java.util.function.Predicate.not;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * open-rpc-meta-schema simple schema scanner ... but not a real good one :)
@@ -53,22 +52,32 @@ public final class SchemaParser {
     }
 
     public List<JsonObjectClassDefinition> createModel() {
-        final List<JsonObjectClassDefinition> result = new ArrayList<>();
-        result.add(new DefaultJsonObjectClassDefinition(schema, typeRegistry, jsonTypeToJavaTypeMapping));
-        if (schema.containsKey("definitions")) {
-            result.addAll(
+        return Stream
+            .concat(
+                Stream.of(new DefaultJsonObjectClassDefinition(schema, typeRegistry, jsonTypeToJavaTypeMapping)),
+                Stream.of("properties", "definitions").flatMap(this::extractDefinitionsFromProperty)
+            )
+            .toList();
+    }
+
+    private Stream<JsonObjectClassDefinition> extractDefinitionsFromProperty(final String propertyName) {
+        final Stream<JsonObjectClassDefinition> result;
+        if (schema.containsKey(propertyName)) {
+            result =
                 schema
-                    .getJsonObject("definitions")
+                    .getJsonObject(propertyName)
                     .entrySet()
                     .stream()
                     .filter(not(e -> Objects.equals(e.getKey(), "specificationExtension")))
                     .filter(not(e -> Objects.equals(e.getKey(), "JSONSchema")))
                     .map(Map.Entry::getValue)
+                    .filter(e -> e.getValueType() == JsonValue.ValueType.OBJECT)
                     .map(JsonValue::asJsonObject)
-                    .map(j -> new DefaultJsonObjectClassDefinition(j, typeRegistry, jsonTypeToJavaTypeMapping))
-                    .toList()
-            );
+                    .filter(e -> e.containsKey("type") && e.getString("type").equals("object"))
+                    .map(j -> new DefaultJsonObjectClassDefinition(j, typeRegistry, jsonTypeToJavaTypeMapping));
+        } else {
+            result = Stream.empty();
         }
-        return Collections.unmodifiableList(result);
+        return result;
     }
 }
