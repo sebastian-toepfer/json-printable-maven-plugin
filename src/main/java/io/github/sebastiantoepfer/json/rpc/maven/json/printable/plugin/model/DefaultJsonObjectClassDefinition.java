@@ -23,12 +23,15 @@
  */
 package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
 
+import static java.util.function.Predicate.not;
+
 import io.github.sebastiantoepfer.ddd.common.Media;
 import io.github.sebastiantoepfer.ddd.common.Printable;
 import io.github.sebastiantoepfer.ddd.printables.core.CompositePrintable;
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.utils.FirstCharToUpperCase;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
+import jakarta.json.JsonValue;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -78,7 +81,7 @@ class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
     @Override
     public List<Property> properties() {
         final List<String> required = determineRequired();
-        return createPropertiesDefinitions().stream().filter(Predicate.not(p -> required.contains(p.name()))).toList();
+        return createPropertiesDefinitions().stream().filter(not(p -> required.contains(p.name()))).toList();
     }
 
     @Override
@@ -121,10 +124,11 @@ class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
 
     private List<Property> createPropertiesDefinitions() {
         return object
-            .getJsonObject("properties")
+            .getOrDefault("properties", JsonValue.EMPTY_JSON_OBJECT)
+            .asJsonObject()
             .entrySet()
             .stream()
-            .filter(Predicate.not(e -> Objects.equals(e.getKey(), "$schema")))
+            .filter(not(e -> Objects.equals(e.getKey(), "$schema")))
             .map(json -> new Property(this, typeRegistry, jsonTypeToJavaTypeMapping, json))
             .toList();
     }

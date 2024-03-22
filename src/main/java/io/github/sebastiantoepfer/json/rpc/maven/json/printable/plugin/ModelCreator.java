@@ -49,7 +49,6 @@ final class ModelCreator {
             new CompositeTypeRegistry(List.of(typeRegistry, new PrintableAdapters())),
             typeRegistry
         )
-            .createModel()
-            .stream();
+            .createModel();
     }
 }

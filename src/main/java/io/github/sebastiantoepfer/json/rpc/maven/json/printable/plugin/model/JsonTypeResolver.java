@@ -42,7 +42,12 @@ class JsonTypeResolver {
         } else if (typeInfo.containsKey("enum")) {
             result = "enum";
         } else if (typeInfo.containsKey("type")) {
-            result = typeInfo.getString("type");
+            final String typeInJson = typeInfo.getString("type");
+            if (typeInJson.equals("object")) {
+                result = typeInfo.getString("title", typeInJson);
+            } else {
+                result = typeInJson;
+            }
         } else if (typeInfo.containsKey("$ref")) {
             final String ref = typeInfo.getString("$ref");
             result = ref.substring(ref.lastIndexOf('/') + 1);

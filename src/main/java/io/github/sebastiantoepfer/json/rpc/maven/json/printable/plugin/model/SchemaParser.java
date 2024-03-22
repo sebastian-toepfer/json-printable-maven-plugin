@@ -25,9 +25,9 @@ package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
 
 import static java.util.function.Predicate.not;
 
+import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -51,13 +51,11 @@ public final class SchemaParser {
         this.jsonTypeToJavaTypeMapping = jsonTypeToJavaTypeMapping;
     }
 
-    public List<JsonObjectClassDefinition> createModel() {
-        return Stream
-            .concat(
-                Stream.of(new DefaultJsonObjectClassDefinition(schema, typeRegistry, jsonTypeToJavaTypeMapping)),
-                Stream.of("properties", "definitions").flatMap(this::extractDefinitionsFromProperty)
-            )
-            .toList();
+    public Stream<JsonObjectClassDefinition> createModel() {
+        return Stream.concat(
+            Stream.of(new DefaultJsonObjectClassDefinition(schema, typeRegistry, jsonTypeToJavaTypeMapping)),
+            Stream.of("properties", "definitions").flatMap(this::extractDefinitionsFromProperty)
+        );
     }
 
     private Stream<JsonObjectClassDefinition> extractDefinitionsFromProperty(final String propertyName) {
@@ -73,11 +71,15 @@ public final class SchemaParser {
                     .map(Map.Entry::getValue)
                     .filter(e -> e.getValueType() == JsonValue.ValueType.OBJECT)
                     .map(JsonValue::asJsonObject)
-                    .filter(e -> e.containsKey("type") && e.getString("type").equals("object"))
-                    .map(j -> new DefaultJsonObjectClassDefinition(j, typeRegistry, jsonTypeToJavaTypeMapping));
+                    .filter(e -> e.containsKey("type") && e.get("type").equals(Json.createValue("object")))
+                    .flatMap(this::createDefinitions);
         } else {
             result = Stream.empty();
         }
         return result;
+    }
+
+    private Stream<JsonObjectClassDefinition> createDefinitions(final JsonObject subSchema) {
+        return new SchemaParser(subSchema, typeRegistry, jsonTypeToJavaTypeMapping).createModel();
     }
 }

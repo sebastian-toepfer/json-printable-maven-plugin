@@ -126,7 +126,7 @@ class DefaultJsonObjectClassWriterTest {
                         return new OpenrpcDocument(values.withPrintable(new NamedListPrintable("servers", servers)));
                     }
 
-                    public OpenrpcDocument withComponents(final Printable components) {
+                    public OpenrpcDocument withComponents(final Components components) {
                         return new OpenrpcDocument(values.withPrintable(new NamedPrintable("components", components)));
                     }
 
@@ -284,8 +284,77 @@ class DefaultJsonObjectClassWriterTest {
     }
 
     @Test
-    void should_generate_javaclass_from_propety() throws Exception {
-        assertThat(generateOpenRPCSpecClassWithName("Components"), not((Matchers.emptyString())));
+    void should_generate_javaclass_from_property() throws Exception {
+        assertThat(
+            generateOpenRPCSpecClassWithName("Components"),
+            is(
+                """
+                package io.github;
+
+                import io.github.sebastiantoepfer.ddd.common.Media;
+                import io.github.sebastiantoepfer.ddd.common.Printable;
+                import io.github.sebastiantoepfer.ddd.printables.core.CompositePrintable;
+                import io.github.sebastiantoepfer.ddd.printables.core.NamedPrintable;
+                import java.util.Objects;
+                import javax.annotation.processing.Generated;
+
+                @Generated("jsongen")
+                public final class Components implements Printable {
+
+                    private final CompositePrintable values;
+
+                    public Components() {
+                        this(
+                            new CompositePrintable()
+                        );
+                    }
+
+                    private Components(final CompositePrintable values) {
+                        this.values = Objects.requireNonNull(values);
+                    }
+
+                    public Components withSchemas(final SchemaComponents schemas) {
+                        return new Components(values.withPrintable(new NamedPrintable("schemas", schemas)));
+                    }
+
+                    public Components withLinks(final LinkComponents links) {
+                        return new Components(values.withPrintable(new NamedPrintable("links", links)));
+                    }
+
+                    public Components withErrors(final ErrorComponents errors) {
+                        return new Components(values.withPrintable(new NamedPrintable("errors", errors)));
+                    }
+
+                    public Components withExamples(final ExampleComponents examples) {
+                        return new Components(values.withPrintable(new NamedPrintable("examples", examples)));
+                    }
+
+                    public Components withExamplePairings(final ExamplePairingComponents examplePairings) {
+                        return new Components(values.withPrintable(new NamedPrintable("examplePairings", examplePairings)));
+                    }
+
+                    public Components withContentDescriptors(final ContentDescriptorComponents contentDescriptors) {
+                        return new Components(values.withPrintable(new NamedPrintable("contentDescriptors", contentDescriptors)));
+                    }
+
+                    public Components withTags(final TagComponents tags) {
+                        return new Components(values.withPrintable(new NamedPrintable("tags", tags)));
+                    }
+
+                    @Override
+                    public final <T extends Media<T>> T printOn(final T media) {
+                        return values.printOn(media);
+                    }
+
+                }
+                """
+            )
+        );
+    }
+
+    @Test
+    void should_generate_javaclass_from_property_inside_property() throws Exception {
+        assertThat(generateOpenRPCSpecClassWithName("SchemaComponents"), not((Matchers.emptyString())));
     }
 
     @Test
