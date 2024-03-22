@@ -26,6 +26,7 @@ package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toCollection;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.sebastiantoepfer.ddd.common.Media;
 import io.github.sebastiantoepfer.ddd.common.Printable;
 import jakarta.json.JsonArray;
@@ -147,6 +148,16 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
         return oneOf.stream().map(JsonValue::asJsonObject).map(ParameterAlternative::new).toList();
     }
 
+    @Override
+    public boolean hasAdditionalValues() {
+        return additionalValues() != null;
+    }
+
+    @Override
+    public AdditionalValue additionalValues() {
+        return null;
+    }
+
     public final class ParameterAlternative implements Typeable {
 
         private final JsonObject obj;
@@ -156,6 +167,7 @@ public final class ParameterAlternatives implements JsonObjectClassDefinition {
         }
 
         @Override
+        @SuppressFBWarnings("EI_EXPOSE_REP")
         public JsonObjectClassDefinition owner() {
             return ParameterAlternatives.this;
         }

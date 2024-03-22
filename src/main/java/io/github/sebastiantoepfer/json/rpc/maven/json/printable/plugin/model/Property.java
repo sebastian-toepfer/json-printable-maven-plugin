@@ -23,6 +23,7 @@
  */
 package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.utils.FirstCharToUpperCase;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -142,6 +143,7 @@ public final class Property implements Typeable {
     }
 
     @Override
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public JsonObjectClassDefinition owner() {
         return owner;
     }
