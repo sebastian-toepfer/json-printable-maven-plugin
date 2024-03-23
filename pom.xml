@@ -7,7 +7,7 @@
 
     <groupId>io.github.sebastian-toepfer.json.rpc</groupId>
     <artifactId>json-printable-maven-plugin</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>maven-plugin</packaging>
 
     <name>json-printable-maven-plugin</name>
@@ -41,7 +41,7 @@
     </scm>
 
     <properties>
-        <project.build.outputTimestamp>2024-01-27T14:19:24Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2024-03-23T13:46:35Z</project.build.outputTimestamp>
         <sonar.organization>sebastian-toepfer</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
