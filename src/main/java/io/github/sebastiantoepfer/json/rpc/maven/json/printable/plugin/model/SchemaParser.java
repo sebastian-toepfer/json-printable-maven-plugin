@@ -52,9 +52,26 @@ public final class SchemaParser {
     }
 
     public Stream<JsonObjectClassDefinition> createModel() {
-        return Stream.concat(
-            Stream.of(new DefaultJsonObjectClassDefinition(schema, typeRegistry, jsonTypeToJavaTypeMapping)),
-            Stream.of("properties", "definitions").flatMap(this::extractDefinitionsFromProperty)
+        final Stream<JsonObjectClassDefinition> result;
+        if (canBeUsedAsClass()) {
+            result =
+                Stream.concat(
+                    Stream.of(new DefaultJsonObjectClassDefinition(schema, typeRegistry, jsonTypeToJavaTypeMapping)),
+                    Stream.concat(
+                        Stream.of("properties", "definitions").flatMap(this::extractDefinitionsFromProperty),
+                        patternProperties()
+                    )
+                );
+        } else {
+            result = Stream.empty();
+        }
+        return result;
+    }
+
+    private boolean canBeUsedAsClass() {
+        return (
+            Objects.equals(schema.get("type"), Json.createValue("object")) &&
+            !Objects.equals(schema.get("title"), JsonValue.NULL)
         );
     }
 
@@ -71,12 +88,22 @@ public final class SchemaParser {
                     .map(Map.Entry::getValue)
                     .filter(e -> e.getValueType() == JsonValue.ValueType.OBJECT)
                     .map(JsonValue::asJsonObject)
-                    .filter(e -> e.containsKey("type") && e.get("type").equals(Json.createValue("object")))
                     .flatMap(this::createDefinitions);
         } else {
             result = Stream.empty();
         }
         return result;
+    }
+
+    private Stream<JsonObjectClassDefinition> patternProperties() {
+        return schema
+            .getOrDefault("patternProperties", JsonValue.EMPTY_JSON_OBJECT)
+            .asJsonObject()
+            .values()
+            .stream()
+            .filter(e -> e.getValueType() == JsonValue.ValueType.OBJECT)
+            .map(JsonValue::asJsonObject)
+            .flatMap(this::createDefinitions);
     }
 
     private Stream<JsonObjectClassDefinition> createDefinitions(final JsonObject subSchema) {

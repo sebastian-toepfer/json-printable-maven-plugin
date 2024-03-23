@@ -118,7 +118,6 @@ class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
             .asJsonObject()
             .entrySet()
             .stream()
-            .filter(e -> e.getValue().asJsonObject().containsKey("$ref"))
             .limit(1)
             .map(e ->
                 new AdditionalValue(
