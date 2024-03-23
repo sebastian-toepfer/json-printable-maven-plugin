@@ -28,6 +28,7 @@ import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.utils.Fir
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -177,6 +178,17 @@ public final class Property implements Typeable {
     @Override
     public String name() {
         return json.getKey();
+    }
+
+    public String variableName() {
+        final String result;
+        final String name = name();
+        if (List.of("default", "enum").contains(name)) {
+            result = name.concat("Value");
+        } else {
+            result = name;
+        }
+        return result;
     }
 
     class OneOfAlternativeTypeable implements Typeable {

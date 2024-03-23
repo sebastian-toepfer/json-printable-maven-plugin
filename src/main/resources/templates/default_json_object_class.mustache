@@ -13,11 +13,11 @@ public final class {{objectname}} implements Printable {
     {{/hasAdditionalValues}}
     private final CompositePrintable values;
 
-    public {{objectname}}({{#required}}final {{type}}{{#genericType}}<{{genericType}}>{{/genericType}} {{name}}{{^-last}}, {{/-last}}{{/required}}) {
+    public {{objectname}}({{#required}}final {{type}}{{#genericType}}<{{genericType}}>{{/genericType}} {{variableName}}{{^-last}}, {{/-last}}{{/required}}) {
         this(
             new CompositePrintable()
             {{#required}}
-                .withPrintable(new {{adapter}}("{{name}}", {{#isNullable}}Objects.requireNonNull({{/isNullable}}{{name}}{{#isNullable}}){{/isNullable}}{{#toString}}.{{toString}}(){{/toString}}))
+                .withPrintable(new {{adapter}}("{{name}}", {{#isNullable}}Objects.requireNonNull({{/isNullable}}{{variableName}}{{#isNullable}}){{/isNullable}}{{#toString}}.{{toString}}(){{/toString}}))
             {{/required}}
             {{#hasAdditionalValues}}
             , Map.of()
@@ -50,8 +50,8 @@ public final class {{objectname}} implements Printable {
     {{/hasAdditionalValues}}
 
     {{#properties}}
-    public {{objectname}} with{{#cap1stChar}}{{name}}{{/cap1stChar}}(final {{type}}{{#genericType}}<{{genericType}}>{{/genericType}} {{name}}) {
-        return new {{objectname}}(values.withPrintable(new {{adapter}}("{{name}}", {{name}}{{#toString}}.{{toString}}(){{/toString}})){{#hasAdditionalValues}}, this.additionalValues{{/hasAdditionalValues}});
+    public {{objectname}} with{{#cap1stChar}}{{name}}{{/cap1stChar}}(final {{type}}{{#genericType}}<{{genericType}}>{{/genericType}} {{variableName}}) {
+        return new {{objectname}}(values.withPrintable(new {{adapter}}("{{name}}", {{variableName}}{{#toString}}.{{toString}}(){{/toString}})){{#hasAdditionalValues}}, this.additionalValues{{/hasAdditionalValues}});
     }
 
     {{/properties}}

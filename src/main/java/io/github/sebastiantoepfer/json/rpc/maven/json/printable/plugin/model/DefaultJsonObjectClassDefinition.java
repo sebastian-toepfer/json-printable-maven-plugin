@@ -118,7 +118,6 @@ class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
             .asJsonObject()
             .entrySet()
             .stream()
-            .filter(e -> e.getValue().asJsonObject().containsKey("$ref"))
             .limit(1)
             .map(e ->
                 new AdditionalValue(
@@ -165,6 +164,7 @@ class DefaultJsonObjectClassDefinition implements JsonObjectClassDefinition {
             .stream()
             .filter(not(e -> Objects.equals(e.getKey(), "$schema")))
             .map(json -> new Property(this, typeRegistry, jsonTypeToJavaTypeMapping, json))
+            .filter(not(p -> Objects.equals(p.genericType(), "String")))
             .toList();
     }
 

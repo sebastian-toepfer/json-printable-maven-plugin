@@ -616,6 +616,116 @@ class DefaultJsonObjectClassWriterTest {
         );
     }
 
+    @Test
+    void should_generate_class_referenced_by_pattern_properties() throws Exception {
+        assertThat(
+            generateOpenRPCSpecClassWithName("ServerObjectVariable"),
+            is(
+                """
+                package io.github;
+
+                import io.github.sebastiantoepfer.ddd.common.Media;
+                import io.github.sebastiantoepfer.ddd.common.Printable;
+                import io.github.sebastiantoepfer.ddd.printables.core.CompositePrintable;
+                import io.github.sebastiantoepfer.ddd.printables.core.NamedStringPrintable;
+                import java.util.Objects;
+                import javax.annotation.processing.Generated;
+
+                @Generated("jsongen")
+                public final class ServerObjectVariable implements Printable {
+
+                    private final CompositePrintable values;
+
+                    public ServerObjectVariable(final String defaultValue) {
+                        this(
+                            new CompositePrintable()
+                                .withPrintable(new NamedStringPrintable("default", Objects.requireNonNull(defaultValue)))
+                        );
+                    }
+
+                    private ServerObjectVariable(final CompositePrintable values) {
+                        this.values = Objects.requireNonNull(values);
+                    }
+
+                    public ServerObjectVariable withDescription(final String description) {
+                        return new ServerObjectVariable(values.withPrintable(new NamedStringPrintable("description", description)));
+                    }
+
+                    @Override
+                    public final <T extends Media<T>> T printOn(final T media) {
+                        return values.printOn(media);
+                    }
+
+                }
+                """
+            )
+        );
+    }
+
+    @Test
+    void should_generate_class_reference_a_pattern_property_defining_the_whole_object() throws Exception {
+        assertThat(
+            generateOpenRPCSpecClassWithName("ServerObjectVariables"),
+            is(
+                """
+                package io.github;
+
+                import io.github.sebastiantoepfer.ddd.common.Media;
+                import io.github.sebastiantoepfer.ddd.common.Printable;
+                import io.github.sebastiantoepfer.ddd.printables.core.CompositePrintable;
+                import io.github.sebastiantoepfer.ddd.printables.core.NamedPrintable;
+                import java.util.HashMap;
+                import java.util.Map;
+                import java.util.Objects;
+                import java.util.regex.Pattern;
+                import javax.annotation.processing.Generated;
+
+                @Generated("jsongen")
+                public final class ServerObjectVariables implements Printable {
+
+                    private static final Pattern PROPERTY_NAME_PATTERN = Pattern.compile("[0-z]+");
+                    private final Map<String, ServerObjectVariable> additionalValues;
+                    private final CompositePrintable values;
+
+                    public ServerObjectVariables() {
+                        this(
+                            new CompositePrintable()
+                            , Map.of()
+                        );
+                    }
+
+                    private ServerObjectVariables(
+                        final CompositePrintable values,
+                        final Map<String, ServerObjectVariable> additionalValues
+                    ) {
+                        this.values = Objects.requireNonNull(values);
+                        this.additionalValues = Map.copyOf(additionalValues);
+                    }
+
+                    public ServerObjectVariables withValue(final String name, final ServerObjectVariable value) {
+                        if (PROPERTY_NAME_PATTERN.asPredicate().negate().test(name)) {
+                            throw new IllegalArgumentException("provided name is not valid!");
+                        }
+                        final var newAdditionalValues = new HashMap(additionalValues);
+                        newAdditionalValues.put(name, value);
+                        return new ServerObjectVariables(values, newAdditionalValues);
+                    }
+
+                    @Override
+                    public final <T extends Media<T>> T printOn(final T media) {
+                        return additionalValues.entrySet()
+                                .stream()
+                                .map(e -> new NamedPrintable(e.getKey(), e.getValue()))
+                                .reduce(values, CompositePrintable::withPrintable, (l,r) -> null)
+                                .printOn(media);
+                    }
+
+                }
+                """
+            )
+        );
+    }
+
     private String generateOpenRPCSpecClassWithName(final String clsName) throws IOException {
         final StringWriter writer = new StringWriter();
         new CodeGenerator(
