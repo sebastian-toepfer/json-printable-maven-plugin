@@ -40,4 +40,8 @@ public interface JsonObjectClassDefinition {
     String packagename();
 
     JsonObjectClassDefinition withPackage(String packagename);
+
+    boolean hasAdditionalValues();
+
+    AdditionalValue additionalValues();
 }

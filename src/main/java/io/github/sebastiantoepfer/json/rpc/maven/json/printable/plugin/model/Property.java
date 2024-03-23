@@ -23,6 +23,7 @@
  */
 package io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.model;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.sebastiantoepfer.json.rpc.maven.json.printable.plugin.utils.FirstCharToUpperCase;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -34,19 +35,19 @@ public final class Property implements Typeable {
 
     private final JsonObjectClassDefinition owner;
     private final TypeRegistry typeRegistry;
-    private final Map.Entry<String, JsonValue> json;
     private final JsonTypeToJavaTypeMapping jsonTypeToJavaTypeMapping;
+    private final Map.Entry<String, JsonValue> json;
 
     Property(
         final JsonObjectClassDefinition owner,
         final TypeRegistry typeRegistry,
         final JsonTypeToJavaTypeMapping jsonTypeToJavaTypeMapping,
-        final Map.Entry<String, JsonValue> property
+        final Map.Entry<String, JsonValue> json
     ) {
         this.owner = Objects.requireNonNull(owner);
         this.typeRegistry = Objects.requireNonNull(typeRegistry);
-        this.json = Objects.requireNonNull(property);
         this.jsonTypeToJavaTypeMapping = jsonTypeToJavaTypeMapping;
+        this.json = Objects.requireNonNull(json);
     }
 
     public String getToString() {
@@ -142,6 +143,7 @@ public final class Property implements Typeable {
     }
 
     @Override
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public JsonObjectClassDefinition owner() {
         return owner;
     }

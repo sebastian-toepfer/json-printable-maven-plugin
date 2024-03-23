@@ -85,7 +85,12 @@ public final class MustacheJavaClassTemplate implements JavaClassTemplate {
             for (Method m : methods) {
                 if (m.getDeclaringClass() != Object.class && m.getParameters().length == 0) {
                     try {
-                        result.add(Map.entry(m.getName(), m.invoke(delegate)));
+                        final Object invocationResult = m.invoke(delegate);
+                        if (invocationResult == null) {
+                            result.add(Map.entry(m.getName(), ""));
+                        } else {
+                            result.add(Map.entry(m.getName(), invocationResult));
+                        }
                     } catch (ReflectiveOperationException e) {
                         //ignore ...
                     }

@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-class CodeGenerator {
+final class CodeGenerator {
 
     private final ModelCreator modelGenerator;
     private final String packageName;
