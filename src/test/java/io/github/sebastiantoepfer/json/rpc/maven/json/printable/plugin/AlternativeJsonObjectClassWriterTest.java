@@ -47,9 +47,11 @@ class AlternativeJsonObjectClassWriterTest {
                 import io.github.sebastiantoepfer.jsonschema.Validator;
                 import jakarta.json.JsonArray;
                 import jakarta.json.JsonObject;
+                import jakarta.json.JsonPointer;
                 import jakarta.json.JsonValue.ValueType;
                 import java.util.Objects;
                 import java.util.Optional;
+                import java.util.stream.Stream;
                 import javax.annotation.processing.Generated;
 
                 @Generated("jsongen")
@@ -81,11 +83,6 @@ class AlternativeJsonObjectClassWriterTest {
                         }
 
                         @Override
-                        public Optional asSubSchema(final String arg0) {
-                            return value().asSubSchema(arg0);
-                        }
-
-                        @Override
                         public ValueType getValueType() {
                             return value().getValueType();
                         }
@@ -98,6 +95,21 @@ class AlternativeJsonObjectClassWriterTest {
                         @Override
                         public JsonSchema rootSchema() {
                             return value().rootSchema();
+                        }
+
+                        @Override
+                        public Optional subSchema(final JsonPointer arg0) {
+                            return value().subSchema(arg0);
+                        }
+
+                        @Override
+                        public Optional subSchema(final String arg0) {
+                            return value().subSchema(arg0);
+                        }
+
+                        @Override
+                        public Stream subSchemas(final String arg0) {
+                            return value().subSchemas(arg0);
                         }
 
                         @Override
