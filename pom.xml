@@ -90,7 +90,7 @@
         <dependency>
             <groupId>io.github.sebastian-toepfer.json-schema</groupId>
             <artifactId>json-schema-api</artifactId>
-            <version>0.2.1</version>
+            <version>0.3.0</version>
         </dependency>
 
         <dependency>
