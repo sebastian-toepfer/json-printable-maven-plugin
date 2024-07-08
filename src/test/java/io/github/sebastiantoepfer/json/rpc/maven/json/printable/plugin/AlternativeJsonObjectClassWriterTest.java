@@ -48,6 +48,7 @@ class AlternativeJsonObjectClassWriterTest {
                 import jakarta.json.JsonArray;
                 import jakarta.json.JsonObject;
                 import jakarta.json.JsonPointer;
+                import jakarta.json.JsonValue;
                 import jakarta.json.JsonValue.ValueType;
                 import java.util.Objects;
                 import java.util.Optional;
@@ -70,6 +71,11 @@ class AlternativeJsonObjectClassWriterTest {
                         @Override
                         public <T extends Media<T>> T printOn(final T media) {
                             return object.printOn(media);
+                        }
+
+                        @Override
+                        public boolean applyTo(final JsonValue arg0) {
+                            return value().applyTo(arg0);
                         }
 
                         @Override
