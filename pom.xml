@@ -152,6 +152,7 @@
                     <version>3.15.0</version>
                     <configuration>
                         <compilerArgs>
+                            <arg>-XDaddTypeAnnotationsToSymbol=true</arg>s
                             <arg>-XDcompilePolicy=simple</arg>
                             <arg>--should-stop=ifError=FLOW</arg>
                             <arg>-Xplugin:ErrorProne</arg>
