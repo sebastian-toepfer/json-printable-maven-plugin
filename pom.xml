@@ -55,7 +55,7 @@
 
         <prettierJavaVersion>2.5.0</prettierJavaVersion>
 
-        <maven.version>3.8.2</maven.version>
+        <maven.version>3.10.1</maven.version>
         <ddd.version>0.7.0</ddd.version>
     </properties>
 
